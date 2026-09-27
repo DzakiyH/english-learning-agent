@@ -1,0 +1,20 @@
+# Environment & Secrets
+.env
+*.env
+*.key
+
+# Persistent database (keep personal learning history out of git)
+*.db
+_test_vocab.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
