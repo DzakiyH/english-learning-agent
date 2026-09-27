@@ -20,6 +20,11 @@ Phases 0–6 completed. Vocabulary engine fully functional with persistent stora
 - In-session candidate discovery (Phase 5):
   - End-of-session candidate words extracted from generated text.
   - Adding a word (`add <word>`) automatically queues it as `REQUESTED` with top priority for the next session.
+- Telegram Bot interface (`bot.py`):
+  - Powered by Google Gemini (`gemini-flash-lite`).
+  - Supports natural language intent parsing (evaluations, study requests, adding words) and slash commands (`/today`, `/stats`, `/list`, `/add`).
+  - Safe multi-message chunking for mobile reading.
+  - Optional `ALLOWED_USER_ID` security gate.
 
 ## User Preferences Learned
 
@@ -30,7 +35,8 @@ Phases 0–6 completed. Vocabulary engine fully functional with persistent stora
 - Wants pronunciation guidance (learning IPA gradually).
 - Wants pattern notes, fixed expressions, and quick-recap tables always included.
 - Oxford 3000/5000 chosen as the core vocabulary source (B1–C1).
+- Google Gemini via Google AI Studio chosen as primary LLM.
 
 ## Next Step
 
-Prepare for VPS / Cloud deployment (Phase 9) so the learning agent can run continuously for daily study sessions without needing the PC always on.
+Deploy `bot.py` to Maritime using GitHub repo connection.
