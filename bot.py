@@ -316,6 +316,17 @@ def main():
     if not bot:
         print("Error: TELEGRAM_BOT_TOKEN is not set. Please configure .env file.")
         sys.exit(1)
+
+    # Auto-seed if database is brand new (e.g. freshly mounted volume on VPS)
+    try:
+        stats = vocab.get_stats()
+        if stats["total"] == 0:
+            print("Database is empty. Auto-seeding initial Oxford vocabulary...")
+            import seed_oxford
+            seed_oxford.seed()
+    except Exception as e:
+        logger.warning(f"Auto-seed check: {e}")
+
     print("🤖 English Learning Telegram Bot is running! Press Ctrl+C to stop.")
     bot.infinity_polling()
 

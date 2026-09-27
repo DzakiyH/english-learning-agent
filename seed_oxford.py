@@ -6,7 +6,7 @@ import urllib.request
 
 HTML_CACHE = r"C:\Users\INTEL\.gemini\antigravity-cli\brain\a51bd638-5f21-4254-a1b4-0babe80c0b3d\.system_generated\steps\68\content.md"
 URL = "https://www.oxfordlearnersdictionaries.com/wordlists/oxford3000-5000"
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vocab.db")
+DB_PATH = os.getenv("VOCAB_DB_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "vocab.db"))
 JSON_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "oxford_words.json")
 
 def get_html():
