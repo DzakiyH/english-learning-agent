@@ -1,11 +1,13 @@
 import os
 import re
+import json
 import sqlite3
 import urllib.request
 
 HTML_CACHE = r"C:\Users\INTEL\.gemini\antigravity-cli\brain\a51bd638-5f21-4254-a1b4-0babe80c0b3d\.system_generated\steps\68\content.md"
 URL = "https://www.oxfordlearnersdictionaries.com/wordlists/oxford3000-5000"
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vocab.db")
+JSON_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "oxford_words.json")
 
 def get_html():
     if os.path.exists(HTML_CACHE):
@@ -16,6 +18,32 @@ def get_html():
         return resp.read().decode("utf-8")
 
 def seed():
+    if os.path.exists(JSON_PATH):
+        with open(JSON_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        conn = sqlite3.connect(DB_PATH)
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS words (
+                word TEXT PRIMARY KEY COLLATE NOCASE,
+                status TEXT DEFAULT 'NEW',
+                times_practiced INTEGER DEFAULT 0,
+                last_practiced TEXT,
+                next_review TEXT,
+                notes TEXT
+            );
+        """)
+        for item in data:
+            conn.execute("""
+                INSERT INTO words (word, status, times_practiced, notes)
+                VALUES (?, 'NEW', 0, ?)
+                ON CONFLICT(word) DO NOTHING;
+            """, (item["word"], item["notes"]))
+        conn.commit()
+        total = conn.execute("SELECT COUNT(*) FROM words;").fetchone()[0]
+        conn.close()
+        print(f"Seeded from oxford_words.json. Total words in DB: {total}")
+        return
+
     html = get_html()
     pattern = re.compile(
         r'<li\s+data-hw="([^"]+)"(?:[^>]*data-ox3000="([^"]*)")?(?:[^>]*data-ox5000="([^"]*)")?[^>]*>(.*?)</li>',
